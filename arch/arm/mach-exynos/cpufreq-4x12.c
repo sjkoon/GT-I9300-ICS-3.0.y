@@ -328,8 +328,8 @@ static const unsigned int asv_voltage_4212[CPUFREQ_LEVEL_END][12] = {
 };
 
 static const unsigned int asv_voltage_s[CPUFREQ_LEVEL_END] = {
-	1300000, 1300000, 1300000, 1250000, 1200000, 1175000, 1100000,
-	1050000, 1025000, 1000000, 1000000, 1000000, 950000, 950000
+	1250000, 1250000, 1250000, 1200000, 1175000, 1125000, 1075000,
+	1000000, 975000, 950000, 925000, 925000, 900000, 875000
 };
 
 /* ASV table for 12.5mV step */
@@ -561,22 +561,8 @@ static void __init set_volt_table(void)
 
 	pr_info("DVFS : VDD_ARM Voltage table set with %d Group\n", exynos_result_of_asv);
 
-	if (exynos_result_of_asv == 0xff) {
-		for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
-			exynos4x12_volt_table[i] = asv_voltage_s[i];
-	} else {
-		if (soc_is_exynos4212()) {
-			for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
-				exynos4x12_volt_table[i] =
-					asv_voltage_4212[i][exynos_result_of_asv];
-		} else if (soc_is_exynos4412()) {
-			for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
-				exynos4x12_volt_table[i] =
-					asv_voltage_step_12_5[i][exynos_result_of_asv];
-		} else {
-			pr_err("%s: Can't find SoC type \n", __func__);
-		}
-	}
+	for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
+		exynos4x12_volt_table[i] = asv_voltage_s[i];
 }
 
 /*
