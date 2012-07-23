@@ -58,6 +58,9 @@
 #include <linux/fb.h>
 #endif
 
+bool touch_booster_enabled = true;
+module_param(touch_booster_enabled, bool, 0775);
+
 #define MAX_FINGERS		10
 #define MAX_WIDTH		30
 #define MAX_PRESSURE		255
@@ -660,8 +663,8 @@ static void release_all_fingers(struct mms_ts_info *info)
 	}
 	input_sync(info->input_dev);
 #if TOUCH_BOOSTER
-	set_dvfs_lock(info, 2);
-	pr_info("[TSP] dvfs_lock free.\n ");
+	if (touch_booster_enabled)
+		set_dvfs_lock(info, 2);
 #endif
 }
 
@@ -956,7 +959,8 @@ static irqreturn_t mms_ts_interrupt(int irq, void *dev_id)
 	}
 
 #if TOUCH_BOOSTER
-	set_dvfs_lock(info, !!touch_is_pressed);
+	if (touch_booster_enabled)
+		set_dvfs_lock(info, !!touch_is_pressed);
 #endif
 
 out:
@@ -3329,12 +3333,14 @@ static int __devinit mms_ts_probe(struct i2c_client *client,
 	}
 
 #if TOUCH_BOOSTER
-	mutex_init(&info->dvfs_lock);
-	INIT_DELAYED_WORK(&info->work_dvfs_off, set_dvfs_off);
-	INIT_DELAYED_WORK(&info->work_dvfs_chg, change_dvfs_lock);
-	bus_dev = dev_get("exynos-busfreq");
-	info->cpufreq_level = -1;
-	info->dvfs_lock_status = false;
+	if (touch_booster_enabled) {
+		mutex_init(&info->dvfs_lock);
+		INIT_DELAYED_WORK(&info->work_dvfs_off, set_dvfs_off);
+		INIT_DELAYED_WORK(&info->work_dvfs_chg, change_dvfs_lock);
+		bus_dev = dev_get("exynos-busfreq");
+		info->cpufreq_level = -1;
+		info->dvfs_lock_status = false;
+	}
 #endif
 
 	info->enabled = true;
