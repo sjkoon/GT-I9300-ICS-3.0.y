@@ -328,9 +328,9 @@ static const unsigned int asv_voltage_4212[CPUFREQ_LEVEL_END][12] = {
 };
 
 static const unsigned int asv_voltage_s[CPUFREQ_LEVEL_END] = {
-	//1250000, //L0
+	1250000, //L0
 	1250000, //L1
-	1250000, //L2
+	1225000, //L2
 	1200000, //L3
 	1125000, //L4
 	1075000, //L5
@@ -340,8 +340,8 @@ static const unsigned int asv_voltage_s[CPUFREQ_LEVEL_END] = {
 	950000,  //L9
 	925000,  //L10
 	900000,  //L11
-	875000,  //L12
-	850000   //L13
+	850000,  //L12
+	800000   //L13
 };
 
 /* ASV table for 12.5mV step */
