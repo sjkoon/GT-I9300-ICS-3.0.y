@@ -573,8 +573,22 @@ static void __init set_volt_table(void)
 
 	pr_info("DVFS : VDD_ARM Voltage table set with %d Group\n", exynos_result_of_asv);
 
-	for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
-		exynos4x12_volt_table[i] = asv_voltage_s[i];
+	if (exynos_result_of_asv == 0xff) {
+			for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
+				exynos4x12_volt_table[i] = asv_voltage_s[i];
+		} else {
+			if (soc_is_exynos4212()) {
+				for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
+					exynos4x12_volt_table[i] =
+						asv_voltage_4212[i][exynos_result_of_asv];
+			} else if (soc_is_exynos4412()) {
+				for (i = 0 ; i < CPUFREQ_LEVEL_END ; i++)
+					exynos4x12_volt_table[i] =
+						asv_voltage_step_12_5[i][exynos_result_of_asv];
+			} else {
+				pr_err("%s: Can't find SoC type \n", __func__);
+			}
+		}
 }
 
 /*
