@@ -95,9 +95,9 @@ mali_dvfs_table mali_dvfs[MALI_DVFS_STEPS]={
 
 mali_dvfs_threshold_table mali_dvfs_threshold[MALI_DVFS_STEPS]={
 	{0   , 70},
-	{62  , 90},
-	{85  , 90},
-	{90  ,100}
+	{30  , 90},
+	{60  , 90},
+	{80  ,100}
 };
 
 #ifdef EXYNOS4_ASV_ENABLED
